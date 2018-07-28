@@ -18,6 +18,9 @@
             [lein-auto "0.1.3"]
             [lein-cljfmt "0.6.0"]]
 
+  :doo {:build "unit-tests"
+        :alias {:default [:node]}}
+
   :auto {"test" {:file-pattern #"\.(clj|cljs|cljc|edn)$"}}
 
   :clean-targets ^{:protect false} ["resources/public/js" "target" "out"]
