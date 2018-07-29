@@ -1,6 +1,6 @@
 (ns greenpowermonitor.reffectory)
 
-(def ^:dynamic *verbose* true)
+(def verbose (atom true))
 
 (def ^:private initial-state {:cofxs     {}
                               :fxs       {}
@@ -76,7 +76,7 @@
        handle-effects))
 
 (defn- log-event! [event-data]
-  (when *verbose*
+  (when @verbose
     #?(:cljs (js/console.debug "%cre-om/submit!" "background: #444444; color: #1abb9b" event-data)
        :clj  (println "re-om/submit!" event-data))))
 

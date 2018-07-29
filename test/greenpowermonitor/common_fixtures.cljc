@@ -2,13 +2,17 @@
   (:require
    [greenpowermonitor.reffectory :as reffectory]))
 
+(defn- after-test-fn [initial-handlers-value]
+  (reset! reffectory/verbose true)
+  (reset! reffectory/handlers initial-handlers-value))
+
 #?(:clj  (defn reset-handlers! [f]
-           (binding [reffectory/*verbose* false]
-             (let [initial-value @reffectory/handlers]
-               (f)
-               (reset! reffectory/handlers initial-value))))
+           (let [initial-value @reffectory/handlers]
+             (reset! reffectory/verbose false)
+             (f)
+             (after-test-fn initial-value)))
 
    :cljs (def reset-handlers!
-           (binding [reffectory/*verbose* false]
-             (let [initial-value @reffectory/handlers]
-               {:after #(reset! reffectory/handlers initial-value)}))))
+           (let [initial-value @reffectory/handlers]
+             {:before #(reset! reffectory/verbose false)
+              :after  #(after-test-fn initial-value)})))
