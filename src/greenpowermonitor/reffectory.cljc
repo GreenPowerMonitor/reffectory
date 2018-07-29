@@ -21,59 +21,94 @@
     handler
     (throw (handler-not-found-error id handler-type))))
 
-(defn register-cofx! [cofx-id handler]
-  {:pre [(keyword? cofx-id)
-         (fn? handler)]}
-  (swap! handlers assoc-in [:cofxs cofx-id] handler))
-
-(defn register-fx! [fx-id handler]
-  {:pre [(keyword? fx-id)
-         (fn? handler)]}
-  (swap! handlers assoc-in [:fxs fx-id] handler))
+(defn interceptor [{:keys [before after id] :or {before identity after identity}}]
+  {:id id
+   :before before
+   :after after})
 
 (defn- handle-effects [effects-descriptions]
   (doseq [[effect-id data] effects-descriptions]
     (when data
       ((get-handler :fxs effect-id) data))))
 
-(defn- apply-interceptors [interceptors]
-  (reduce
-   (fn [acc interceptor]
-     (interceptor acc))
-   {}
-   interceptors))
+(def do-fx
+  (interceptor {:id :do-fx
+                :after (fn [{:keys [effects]}]
+                         (handle-effects effects))}))
+
+(defn register-fx! [fx-id handler]
+  {:pre [(keyword? fx-id)
+         (fn? handler)]}
+  (swap! handlers assoc-in [:fxs fx-id] handler))
+
+(defn register-cofx! [cofx-id handler]
+  {:pre [(keyword? cofx-id)
+         (fn? handler)]}
+  (swap! handlers assoc-in [:cofxs cofx-id] handler))
 
 (defn inject-cofx [cofx-kw & args]
   {:pre [(keyword? cofx-kw)]}
-  (apply partial (get-handler :cofxs cofx-kw) args))
+  (let [cofx-handler (get-handler :cofxs cofx-kw)]
+    (interceptor {:id cofx-kw
+                  :before (fn [{:keys [coeffects] :as context}]
+                            (assoc context :coeffects (apply cofx-handler (concat args [coeffects]))))})))
 
 (defn- check-register-event-handler-parameters! [event-id interceptors handler]
   (when-not (keyword? event-id)
     (throw (ex-info "Event id is not a keyword"
                     {:event-id event-id})))
-  (when-not (every? fn? interceptors)
-    (throw (ex-info "Not all interceptors are functions"
+  (when-not (every? map? interceptors)
+    (throw (ex-info "Not all interceptors are maps"
                     {:interceptors interceptors})))
   (when-not (fn? handler)
     (throw (ex-info "The event handler is not a function"
                     {:handler handler}))))
+
+(defn- event-handler-interceptor [event-id handler]
+  (interceptor {:id event-id
+                :before (fn [{:keys [coeffects] :as context}]
+                          (assoc context :effects (handler coeffects (:event coeffects))))}))
 
 (defn register-event-handler!
   ([event-id handler] (register-event-handler! event-id [] handler))
   ([event-id interceptors handler]
    (check-register-event-handler-parameters! event-id interceptors handler)
    (swap! handlers assoc-in [:event-fns event-id] handler)
-   (swap! handlers assoc-in [:events event-id] {:interceptors interceptors
-                                                :handler      handler})))
+   (swap! handlers assoc-in [:events event-id] {:interceptor-chain (concat [do-fx]
+                                                                           interceptors
+                                                                           [(event-handler-interceptor event-id handler)])})))
 
 (defn- execute-event-handler [handler payload cofx]
   (handler cofx payload))
 
-(defn- execute-event-chain [{:keys [interceptors handler]} payload]
-  (->> interceptors
-       apply-interceptors
-       (execute-event-handler handler payload)
-       handle-effects))
+(defn- apply-before-interceptors [ctx]
+  (loop [{:keys [queue] :as context} ctx]
+    (if (empty? queue)
+      context
+      (let [interceptor (first queue)
+            before-fn (:before interceptor)]
+        (recur (-> context
+                   (update :queue rest)
+                   (update :stack conj interceptor)
+                   before-fn))))))
+
+(defn- apply-after-interceptors [ctx]
+  (loop [{:keys [stack] :as context} ctx]
+    (if (empty? stack)
+      context
+      (let [interceptor (peek stack)
+            after-fn (:after interceptor)]
+        (recur (-> context
+                   (update :stack pop)
+                   after-fn))))))
+
+(defn- execute-event-chain [{:keys [interceptor-chain]} payload]
+  (->> {:coeffects {:event payload}
+        :effects {}
+        :queue interceptor-chain
+        :stack (list)}
+       apply-before-interceptors
+       apply-after-interceptors))
 
 (defn- log-event! [event-data]
   (when @verbose
@@ -86,7 +121,7 @@
   (log-event! event-data)
   (let [[event-id & payload] event-data
         event-handler-chain (get-handler :events event-id)]
-    (execute-event-chain event-handler-chain payload)))
+    (execute-event-chain event-handler-chain (vec payload))))
 
 (defn dispatch-n! [events]
   (doseq [event events]
