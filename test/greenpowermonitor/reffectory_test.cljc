@@ -47,6 +47,45 @@
 
       (sut/dispatch! [::cofxs-are-injected passed-payload]))))
 
+(deftest checking-interceptors-are-injected-and-run-when-executing-events
+  (testing "before interceptor is run and changes payload from string to keyword"
+    (let [expected-date-time :any-date
+          passed-payload "some-payload"
+          keywordize-payload (sut/interceptor
+                              {:id :custom-interceptor
+                               :before (fn [context]
+                                         (update-in context [:coeffects :event 0] keyword))})]
+
+      (sut/register-event-handler!
+       ::cofxs-are-injected
+       [keywordize-payload]
+       (make-cofxs-checker [(keyword passed-payload)] {}))
+
+      (sut/dispatch! [::cofxs-are-injected passed-payload])))
+
+  (testing "after interceptor is run and changes effect description by increasing the value"
+    (let [expected-date-time :any-date
+          passed-payload 33
+          expected-effect-data 34
+          effect-args (atom nil)
+          increase-mock-effect-value (sut/interceptor
+                                      {:id :custom-interceptor
+                                       :after (fn [context]
+                                                (update-in context [:effects :mock-effect] inc))})]
+
+      (sut/register-fx!
+       :mock-effect
+       (fn [event]
+         (is (= event expected-effect-data))))
+
+      (sut/register-event-handler!
+       ::cofxs-are-injected
+       [increase-mock-effect-value]
+       (fn [_ [value]]
+         {:mock-effect value}))
+
+      (sut/dispatch! [::cofxs-are-injected passed-payload]))))
+
 (deftest submit-effect-handler
   (let [expected-payload [:arg1 :arg2]
         calls-count (atom 0)]
