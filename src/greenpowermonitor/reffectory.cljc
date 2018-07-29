@@ -75,8 +75,8 @@
    (check-register-event-handler-parameters! event-id interceptors handler)
    (swap! handlers assoc-in [:event-fns event-id] handler)
    (swap! handlers assoc-in [:events event-id] {:interceptor-chain (concat [do-fx]
-                                                                           interceptors
-                                                                           [(event-handler-interceptor event-id handler)])})))
+                                                                           interceptors)
+                                                :event-handler (event-handler-interceptor event-id handler)})))
 
 (defn- execute-event-handler [handler payload cofx]
   (handler cofx payload))
@@ -102,12 +102,18 @@
                    (update :stack pop)
                    after-fn))))))
 
-(defn- execute-event-chain [{:keys [interceptor-chain]} payload]
+(defn- handle-event [ctx]
+  (let [before-fn (get-in ctx [:event-handler :before])]
+    (before-fn ctx)))
+
+(defn- execute-event-chain [{:keys [interceptor-chain event-handler]} payload]
   (->> {:coeffects {:event payload}
         :effects {}
+        :event-handler event-handler
         :queue interceptor-chain
         :stack (list)}
        apply-before-interceptors
+       handle-event
        apply-after-interceptors))
 
 (defn- log-event! [event-data]
