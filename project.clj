@@ -10,8 +10,7 @@
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [org.clojure/clojurescript "1.10.339"]]
 
-  :profiles {:dev {:dependencies [[greenpowermonitor/test-doubles "0.1.3-SNAPSHOT"]
-                                  [org.clojure/core.async "0.4.474"]]}}
+  :profiles {:dev {:dependencies [[org.clojure/core.async "0.4.474"]]}}
 
   :plugins [[lein-cljsbuild "1.1.7"]
             [lein-doo "0.1.10"]

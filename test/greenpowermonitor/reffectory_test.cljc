@@ -1,10 +1,8 @@
 (ns greenpowermonitor.reffectory-test
   (:require
    [clojure.test :refer [deftest is testing use-fixtures #?(:cljs async :clj assert-any)]]
-   #?(:clj
-      [clojure.core.async :refer [<!! >!! timeout]])
+   #?(:clj [clojure.core.async :refer [<!! >!! timeout]])
    [greenpowermonitor.common-fixtures :refer [reset-handlers!]]
-   [greenpowermonitor.test-doubles :as td]
    [greenpowermonitor.reffectory :as sut]))
 
 (use-fixtures :each reset-handlers!)
@@ -19,6 +17,7 @@
 (deftest calling-an-event-handler
   (let [passed-payload :some-payload
         calls-counter (atom 0)]
+
     (sut/register-event-handler!
      ::an-event-handler-is-called
      (fn [cofx payload]
@@ -26,13 +25,13 @@
        (is (= [passed-payload] payload))
        (is (= (contains? cofx :db)))
        {}))
+
     (sut/dispatch! [::an-event-handler-is-called passed-payload])
 
     (is (= 1 @calls-counter))))
 
 (deftest checking-cofxs-are-injected-when-registering-an-event
   (testing "cofxs are injected into the event handler along with the db coeffect"
-
     (let [expected-date-time :any-date
           passed-payload :some-payload]
 
@@ -51,12 +50,14 @@
 (deftest submit-effect-handler
   (let [expected-payload [:arg1 :arg2]
         calls-count (atom 0)]
+
     (sut/register-event-handler!
      ::event-submitted-using-submit-effect
      (fn [_ payload]
        (swap! calls-count inc)
        (is (= expected-payload payload))
        {}))
+
     (sut/register-event-handler!
      ::event-producing-submit-fx
      (fn [_ _]
@@ -71,18 +72,21 @@
         expected-payload-for-second-event [:args2-1 :args2-2]
         first-event-calls-count (atom 0)
         second-event-calls-count (atom 0)]
+
     (sut/register-event-handler!
      ::first-event-submitted-using-submit-n
      (fn [_ payload]
        (swap! first-event-calls-count inc)
        (is (= expected-payload-for-first-event payload))
        {}))
+
     (sut/register-event-handler!
      ::second-event-submitted-using-submit-n
      (fn [_ payload]
        (swap! second-event-calls-count inc)
        (is (= expected-payload-for-second-event payload))
        {}))
+
     (sut/register-event-handler!
      ::event-producing-submit-n-fx
      (fn [_ _]
@@ -100,6 +104,7 @@
 (deftest submit-later-effect-handler
   #?(:cljs (async done
                   (let [delay-in-ms 10]
+
                     (sut/register-event-handler!
                      ::event-submitted-using-submit-later
                      (fn [_ [payload]]
@@ -115,6 +120,7 @@
                          :event [::event-submitted-using-submit-later (js/Date.now)]}}))
 
                     (sut/dispatch! [::event-producing-submit-later-fx])))
+
      :clj  (let [delay-in-ms 10
                  channel (timeout (+ delay-in-ms 100))]
 
@@ -144,6 +150,7 @@
   (let [payload-1 :payload-1
         payload-2 :payload-2
         calls-payloads (atom [])]
+
     (sut/register-event-handler!
      ::event-delegated-to
      (fn [_ payload]
