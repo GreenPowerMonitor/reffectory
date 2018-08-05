@@ -30,27 +30,25 @@
 
     (is (= 1 @calls-counter))))
 
-(deftest checking-cofxs-are-injected-when-registering-an-event
-  (testing "cofxs are injected into the event handler along with the db coeffect"
-    (let [expected-date-time :any-date
-          passed-payload :some-payload]
+(deftest checking-cofxs-are-injected-into-event-handler-when-registering-an-event
+  (let [expected-date-time :any-date
+        passed-payload :some-payload]
 
-      (sut/register-cofx!
-       :date-time
-       (fn [cofx]
-         (assoc cofx :date-time expected-date-time)))
+    (sut/register-cofx!
+      :date-time
+      (fn [cofx]
+        (assoc cofx :date-time expected-date-time)))
 
-      (sut/register-event-handler!
-       ::cofxs-are-injected
-       [(sut/inject-cofx :date-time)]
-       (make-cofxs-checker [passed-payload] {:date-time expected-date-time}))
+    (sut/register-event-handler!
+      ::cofxs-are-injected
+      [(sut/inject-cofx :date-time)]
+      (make-cofxs-checker [passed-payload] {:date-time expected-date-time}))
 
-      (sut/dispatch! [::cofxs-are-injected passed-payload]))))
+    (sut/dispatch! [::cofxs-are-injected passed-payload])))
 
 (deftest checking-interceptors-are-injected-and-run-when-executing-events
   (testing "before interceptor is run and changes payload from string to keyword"
-    (let [expected-date-time :any-date
-          passed-payload "some-payload"
+    (let [passed-payload "some-payload"
           keywordize-payload (sut/interceptor
                               {:id :custom-interceptor
                                :before (fn [context]
@@ -64,10 +62,8 @@
       (sut/dispatch! [::cofxs-are-injected passed-payload])))
 
   (testing "after interceptor is run and changes effect description by increasing the value"
-    (let [expected-date-time :any-date
-          passed-payload 33
+    (let [passed-payload 33
           expected-effect-data 34
-          effect-args (atom nil)
           increase-mock-effect-value (sut/interceptor
                                       {:id :custom-interceptor
                                        :after (fn [context]
