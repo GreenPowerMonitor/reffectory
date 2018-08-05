@@ -1,5 +1,5 @@
 (defproject greenpowermonitor/reffectory "0.1.0-SNAPSHOT"
-  :description "Clojure/ClojureScript full events system with effects and coeffects inspired by re-frame's one"
+  :description "Clojure/ClojureScript framework inspired by re-frame that provides a full events system with effects and coeffects."
   ;:url "https://github.com/GreenPowerMonitor/reffectory"
   :license {:name "Eclipse Public License"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}

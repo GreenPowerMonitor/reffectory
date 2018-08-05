@@ -1,6 +1,6 @@
 # reffectory
 
-A Clojure/ClojureScript library designed to provide a full events system with effects
+A Clojure/ClojureScript framework designed to provide a full events system with effects
 and coeffects inspired by [re-frame](https://github.com/Day8/re-frame)'s one.
 
 reffectory is the core of re-om, the library we're using to introduce [re-frame's event-driven architecture](https://github.com/Day8/re-frame#why-should-you-care)
