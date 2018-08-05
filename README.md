@@ -11,7 +11,7 @@ might find it interesting to build Clojure and ClojureScript libraries and/or ap
 
 ## Usage
 
-We'll grow reffectory and re-om's documentation bit by bit in the next following months.
+We'll grow reffectory's documentation bit by bit in the following months.
 
 ## License
 
