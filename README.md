@@ -1,14 +1,20 @@
 # reffectory
 
-A Clojure library designed to ... well, that part is up to you.
+A Clojure/ClojureScript framework designed to provide a full events system with effects
+and coeffects inspired by [re-frame](https://github.com/Day8/re-frame)'s one.
+
+reffectory is the core of re-om, the library we're using to introduce [re-frame's event-driven architecture](https://github.com/Day8/re-frame#why-should-you-care)
+into a legacy ClojureScript application that uses [Om](https://github.com/omcljs/om).
+
+We extracted reffectory from re-om and made it also work for Clojure in the hope that more people
+might find it interesting to build Clojure and ClojureScript libraries and/or applications on top of it.
 
 ## Usage
 
-FIXME
+We'll grow reffectory's documentation bit by bit in the following months.
 
 ## License
 
-Copyright © 2018 FIXME
+Copyright © 2018 GreenPowerMonitor
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under the Eclipse Public License version 1.0.
