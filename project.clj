@@ -1,11 +1,13 @@
 (defproject greenpowermonitor/reffectory "0.1.0-SNAPSHOT"
-  :description "Clojure/ClojureScript framework inspired by re-frame that provides a full events system with effects and coeffects."
-  ;:url "https://github.com/GreenPowerMonitor/reffectory"
+  :description "Clojure/ClojureScript framework inspired by re-frame that provides a full events system with effects and coeffects"
+
+  :url "https://github.com/GreenPowerMonitor/reffectory"
+
   :license {:name "Eclipse Public License"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
 
-  ;:scm {:name "git"
-  ;      :url "https://github.com/GreenPowerMonitor/reffectory"}
+  :scm {:name "git"
+        :url "https://github.com/GreenPowerMonitor/reffectory"}
 
   :profiles {:provided {:dependencies [[org.clojure/clojure "1.9.0"]
                                        [org.clojure/clojurescript "1.10.339"]]}
