@@ -1,4 +1,4 @@
-# reffectory
+# reffectory [![Clojars Project](https://img.shields.io/clojars/v/greenpowermonitor/reffectory.svg)](https://clojars.org/greenpowermonitor/reffectory)
 
 A Clojure/ClojureScript framework designed to provide a full events system with effects
 and coeffects inspired by [re-frame](https://github.com/Day8/re-frame)'s one.
