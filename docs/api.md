@@ -12,7 +12,7 @@ Example:
 ## dispatch-n! [events]
 It dispatches several events that will be sequentially processed by the event handling machinery.
 
-It receives **a sequence of events**. Each of them must have the structure described in [`dispatch!`](https://github.com/GreenPowerMonitor/reffectory/blob/master/docs/api.md#dispatch-event-data).
+It receives **a sequence of events**. Each of them must have the structure described in [`dispatch!`](https://github.com/GreenPowerMonitor/reffectory/blob/master/docs/api.md#dispatch).
 
 Example:
 ```clj
