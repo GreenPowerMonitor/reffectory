@@ -26,6 +26,7 @@ This function is used to associate a given event with its handler.
 It has two possible arities:
 
 1. [event-id handler]
+
 In this case the first parameter is the event identifier and
 the second parameter is the event handler.
 
@@ -39,6 +40,7 @@ Example:
 ```
 
 2. [event-id interceptors handler]
+
 In this case the first parameter is the event identifier,
 the second parameter is a list of interceptors that will be executed before or after the event handler
 (depending on how they are defined, see [Interceptors](https://github.com/GreenPowerMonitor/reffectory/blob/master/docs/interceptors.md))
