@@ -1,6 +1,4 @@
 # reffectory
-
-## Driven by events and using effects and coeffects to keep event handlers pure.
 A Clojure/ClojureScript framework designed to provide a full events system with effects
 and coeffects inspired by [re-frame](https://github.com/Day8/re-frame)'s one.
 
