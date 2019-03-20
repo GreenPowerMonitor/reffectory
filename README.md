@@ -10,6 +10,7 @@ We extracted reffectory from re-om and made it also work for Clojure in the hope
 might find it interesting to build Clojure and ClojureScript libraries and/or applications on top of it.
 
 ## Usage
+* [What is it?](https://github.com/GreenPowerMonitor/reffectory/blob/master/docs/what-is-it.md)
 
 We'll grow reffectory's documentation bit by bit in the following months.
 
