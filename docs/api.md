@@ -25,7 +25,7 @@ This function is used to associate a given event with its handler.
 
 It has two possible arities:
 
-1. [event-id handler]
+#### [event-id handler]
 
 In this case the first parameter is the event identifier and
 the second parameter is the event handler.
@@ -39,7 +39,7 @@ Example:
                  [::load-charts-data-from-range-change selected-charts-range]]}))
 ```
 
-2. [event-id interceptors handler]
+#### [event-id interceptors handler]
 
 In this case the first parameter is the event identifier,
 the second parameter is a list of interceptors that will be executed before or after the event handler
