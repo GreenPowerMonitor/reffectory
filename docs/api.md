@@ -21,10 +21,7 @@ Example:
 ```
 
 ## register-event-handler!
-
-  [event-id handler]
-  [event-id interceptors handler]
-This function is used to associate a given event identifier with a function, its event handler.
+This function is used to associate a given event with its handler.
 
 It has two possible arities:
 
