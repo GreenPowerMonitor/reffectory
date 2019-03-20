@@ -1,9 +1,8 @@
 ## dispatch!
 It dispatches an **event** that will be processed by the event handling machinery.
+That **event** mues be a vector of at least one element. The first element identifies the kind of event and the rest of the elements are the payload of the event.
 
-The **event** is a vector of length >= 1. Its first element identifies the kind of event and the rest of elements are the payload of the event.
-
-The corresponding event handler will be synchronously run.
+**Important**: The corresponding event handler will be **synchronously** run.
 
 Example:
 ```clj
