@@ -9,7 +9,7 @@ Example:
 (dispatch! [::domain.member/open.rim (:Id data) :overview])
 ```
 
-## dispatch-n! [events]
+## dispatch-n!
 This function dispatches several events that will be sequentially processed by the event handling machinery.
 
 It receives **a sequence of events**. Each of them must have the structure described in [`dispatch!`](https://github.com/GreenPowerMonitor/reffectory/blob/master/docs/api.md#dispatch).
