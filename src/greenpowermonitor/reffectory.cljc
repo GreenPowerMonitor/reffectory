@@ -78,9 +78,6 @@
                                                                            interceptors)
                                                 :event-handler (event-handler-interceptor event-id handler)})))
 
-(defn- execute-event-handler [handler payload cofx]
-  (handler cofx payload))
-
 (defn- apply-before-interceptors [ctx]
   (loop [{:keys [queue] :as context} ctx]
     (if (empty? queue)
