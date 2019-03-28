@@ -132,7 +132,7 @@ the values associated to some given keys.
 
 ## register-events-delegation!
 This function makes the handling of the vector of event identifiers it receives as its first parameter
-to be delegated to the event handler of the event identifier it receives as its second parameter.
+to be delegated to the event handler associated with the event identifier it receives as its second parameter.
 
 Example:
 ```clj
