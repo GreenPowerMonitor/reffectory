@@ -11,6 +11,7 @@ might find it interesting to build Clojure and ClojureScript libraries and/or ap
 
 ## Usage
 * [What is it?](https://github.com/GreenPowerMonitor/reffectory/blob/master/docs/what-is-it.md)
+* [API documentation](https://github.com/GreenPowerMonitor/reffectory/blob/master/docs/api.md)
 
 We'll grow reffectory's documentation bit by bit in the following months.
 
