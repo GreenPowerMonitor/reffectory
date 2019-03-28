@@ -64,7 +64,7 @@ Example:
                      device-id device-id}]}))))
 ```
 
-# `inject-cofx`
+## `inject-cofx`
 This function is used to inject coeffects. It actually creates an interceptor that
 will call the corresponding coeffect handler right before the event handler is called,
 so that the coeffects map includes the actual value that the coeffect declares.
@@ -95,7 +95,7 @@ Notice how in this example when `inject-cofx` is used with the `:state` coeffect
 that means that the `:state` coeffect handler will receive that parameter and use it to compute the value that will be injected in the coeffects map
 when the `::update-facilities-devices-list-info` event handler will be about to be executed.
 
-# register-fx!
+## register-fx!
 This function is used to associate a given effect with its handler.
 
 It receives two parameters: the effect identifier which has to be a keyword and the effect handler which has to be a function.
@@ -111,7 +111,7 @@ Example:
 
 This example registers an effect `:om/state` that mutates the local state of an Om component.
 
-# register-cofx!
+## register-cofx!
 This function is used to associate a given coeffect with its handler.
 
 It receives two parameters: the coeffect identifier which has to be a keyword and the coeffect handler which has to be a function.
@@ -148,12 +148,12 @@ will be delegated to the event handler of the `:facilities-device-power-curve.en
 which will be the only handler that needs to be registered using `register-event-handler!`.
 
 
-# interceptor
+## interceptor
 It's a factory function that can be used to create an interceptor.
 
 See [Interceptors](https://github.com/GreenPowerMonitor/reffectory/blob/master/docs/interceptors.md) to know what an interceptor is.
 
-# get-handler
+## get-handler
 This function is used only in tests and gets handlers registered in reffectory.
 
 It receives two parameters:  the handler type and the identifier of
