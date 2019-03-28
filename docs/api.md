@@ -153,6 +153,27 @@ It's a factory function that can be used to create an interceptor.
 
 See [Interceptors](https://github.com/GreenPowerMonitor/reffectory/blob/master/docs/interceptors.md) to know what an interceptor is.
 
+This function should receive a map with values for the following keywords:
+* `:id`: the identifier of the interceptor.
+* `:before`: a pure function that will be called right before an event handler is executed and will transform what the event handler will receive. By default it's the `identity` function.
+* `:after`: a pure function that will be called right after an event handler is executed and will transform what the effect handlers will receive. By default it's the `identity` function.
+
+Example:
+```clj
+(defn inject-cofx [cofx-kw & args]
+  {:pre [(keyword? cofx-kw)]}
+  (let [cofx-handler (get-handler :cofxs cofx-kw)]
+    (interceptor {:id cofx-kw
+                  :before (fn [{:keys [coeffects] :as context}]
+                                (assoc context :coeffects (apply cofx-handler (concat args [coeffects]))))})))
+```
+
+In this example we show the `inject-cofx` function from reffectory. It uses the `interceptor` function to create an interceptor that
+will apply the corresponding coeffect handler right before the event handler to which you pass this interceptor when it's registered (see [`register-event-handler` documentation above](https://github.com/GreenPowerMonitor/reffectory/blob/master/docs/api.md#register-event-handler))
+and adds it's result to the coeffects map.
+
+You can check [another interesting usage of `interceptor` in reffectory's tests](https://github.com/GreenPowerMonitor/reffectory/blob/bfa13d839782f103cc83502c1b5b4c020887da14/test/greenpowermonitor/reffectory_test.cljc#L49).
+
 ## get-handler
 This function is used only in tests and gets handlers registered in reffectory.
 
