@@ -1,4 +1,4 @@
-## dispatch!
+## `dispatch!`
 This function dispatches an **event** that will be processed by the event handling machinery.
 That **event** mues be a vector of at least one element. The first element identifies the kind of event and the rest of the elements are the payload of the event.
 
@@ -9,7 +9,7 @@ Example:
 (dispatch! [::domain.member/open.rim (:Id data) :overview])
 ```
 
-## dispatch-n!
+## `dispatch-n!`
 This function dispatches several events that will be sequentially processed by the event handling machinery.
 
 It receives **a sequence of events**. Each of them must have the structure described in [`dispatch!`](https://github.com/GreenPowerMonitor/reffectory/blob/master/docs/api.md#dispatch).
@@ -20,7 +20,7 @@ Example:
               [::dialogs.edit/clean-state]])
 ```
 
-## register-event-handler!
+## `register-event-handler!`
 This function is used to associate a given event with its handler.
 
 It has two possible arities:
@@ -49,11 +49,10 @@ and the last parameter is the event handler.
 A typical usage of interceptors is to inject coeffects values into the coeffects map that event handlers receive.
 
 Example:
-
 ```clj
 (register-event-handler!
   ::device-overview.init
-  [inject-cofx :db]
+  [(inject-cofx :db)]
   (fn [{:keys [db]} [device-id]]
     (let [navigation (get-in db [:navigation :current-route])
           facility-id (-> navigation :params :facility-id)
@@ -65,27 +64,106 @@ Example:
                      device-id device-id}]}))))
 ```
 
-# inject-cofx
-[cofx-kw & args]
-TODO
+# `inject-cofx`
+This function is used to inject coeffects. It actually creates an interceptor that
+will call the corresponding coeffect handler right before the event handler is called,
+so that the coeffects map includes the actual value that the coeffect declares.
+
+It receives at least one parameter: the coeffect identifier.
+The rest of parameters are optional and depend on the coeffect being used because
+they will be passed to the coeffect handler.
+
+Example:
+```clj
+(register-event-handler!
+ ::update-facilities-devices-list-info
+ [(inject-cofx :server-uri)
+  (inject-cofx :state {:facility-id facilities-devices-current-facility-id-lens
+                               :time-period facilities-devices-time-period-lens})]
+ (fn [{:keys [server-uri] {:keys [facility-id time-period]} :state} _]
+   {:http.get {:url (urls/mk-facility-devices-list-url server-uri facility-id)
+                     :affected-state-lenses #{facilities-devices-card-devices-state-lens}
+                     :cancel-key ::update-facilities-devices
+                     :success-event ::update-facilities-devices-list-info-succeeded
+                     :query-params {:period (serialize time-period)}}}))
+```
+
+In this example, `inject-cofx` is used to create two interceptors that will inject the values
+represented by the custom `:server-uri` and `:state` coeffects into the coeffects map.
+
+Notice how in this example when `inject-cofx` is used with the `:state` coeffect, it receives another parameter beside the coeffect identifier,
+that means that the `:state` coeffect handler will receive that parameter and use it to compute the value that will be injected in the coeffects map
+when the `::update-facilities-devices-list-info` event handler will be about to be executed.
 
 # register-fx!
- [fx-id handler]
-TODO
+This function is used to associate a given effect with its handler.
+
+It receives two parameters: the effect identifier which has to be a keyword and the effect handler which has to be a function.
+
+Example:
+```clj
+(re-om/register-fx!
+  :om/state
+  (fn [[owner mutations]]
+    (doseq [[kw value] mutations]
+      (om/set-state! owner kw value))))
+```
+
+This example registers an effect `:om/state` that mutates the local state of an Om component.
 
 # register-cofx!
-  {:pre [(keyword? cofx-id)
-         (fn? handler)]}
-TODO
+This function is used to associate a given coeffect with its handler.
+
+It receives two parameters: the coeffect identifier which has to be a keyword and the coeffect handler which has to be a function.
+
+```clj
+(re-om/register-cofx!
+  :om/state
+  (fn [owner kws cofx]
+    (assoc cofx
+      :om/state
+      (into {}
+            (map #(vector % (om/get-state owner %))
+                 kws)))))
+```
+
+This example registers a coeffect `:om/state` that extracts the values associated to given keys
+from the local state of an Om component.
 
 ## register-events-delegation!
 [origin-events target-event]
-TODO
+This function makes the handling of the vector of event identifiers passed as its first parameter
+to be delegated to the event handler of the event identifier passed as its second parameter.
+
+Example:
+```clj
+(re-om/register-events-delegation!
+ [:facilities-device-power-curve-chart.enter
+  :facilities-device-power-curve-table.enter]
+ :facilities-device-power-curve.enter)
+```
+
+In this examples the handling of `:facilities-device-power-curve-chart.enter` and `:facilities-device-power-curve-table.enter`
+will be delegated to the event handler of the `:facilities-device-power-curve.enter` event,
+which will be the only handler that needs to be registered using `register-event-handler!`.
+
 
 # interceptor
-[{:keys [before after id] :or {before identity after identity}}]
-TODO
+It's a factory function that can be used to create an interceptor.
+
+See [Interceptors](https://github.com/GreenPowerMonitor/reffectory/blob/master/docs/interceptors.md) to know what an interceptor is.
 
 # get-handler
-[handler-type id]
-TODO
+This function is used only in tests and gets handlers registered in reffectory.
+
+It receives two parameters:  the handler type and the identifier of
+the thing (event, effect or coeffect) the handler is associated with.
+
+Example:
+```clj
+(let [subscribe (get-handler :event-fns ::real-time-data/subscribe) ;; <- this extracts an event handler
+       extract-om-state (get-handler :cofxs :om/state) ;; <- this extracts a coeffect handler
+       mutate-om-state (get-handler :fxs :om/state)] ;; <- this extracts an effect handler
+ ;; doing something with them in tests
+)
+```
