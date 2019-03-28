@@ -131,8 +131,8 @@ This example registers a coeffect `:om/state` that extracts from the local state
 the values associated to some given keys.
 
 ## register-events-delegation!
-This function makes the handling of the vector of event identifiers passed as its first parameter
-to be delegated to the event handler of the event identifier passed as its second parameter.
+This function makes the handling of the vector of event identifiers it receives as its first parameter
+to be delegated to the event handler of the event identifier it receives as its second parameter.
 
 Example:
 ```clj
