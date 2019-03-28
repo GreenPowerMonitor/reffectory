@@ -127,8 +127,8 @@ It receives two parameters: the coeffect identifier which has to be a keyword an
                  kws)))))
 ```
 
-This example registers a coeffect `:om/state` that extracts from the local state of an Om component the values associated to given keys
-.
+This example registers a coeffect `:om/state` that extracts from the local state of an Om component
+the values associated to some given keys.
 
 ## register-events-delegation!
 [origin-events target-event]
