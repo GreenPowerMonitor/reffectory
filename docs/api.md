@@ -95,7 +95,7 @@ Notice how in this example when `inject-cofx` is used with the `:state` coeffect
 that means that the `:state` coeffect handler will receive that parameter and use it to compute the value that will be injected in the coeffects map
 when the `::update-facilities-devices-list-info` event handler will be about to be executed.
 
-## register-fx!
+## `register-fx!`
 This function is used to associate a given effect with its handler.
 
 It receives two parameters: the effect identifier which has to be a keyword and the effect handler which has to be a function.
@@ -111,7 +111,7 @@ Example:
 
 This example registers an effect `:om/state` that mutates the local state of an Om component.
 
-## register-cofx!
+## `register-cofx!`
 This function is used to associate a given coeffect with its handler.
 
 It receives two parameters: the coeffect identifier which has to be a keyword and the coeffect handler which has to be a function.
@@ -130,7 +130,7 @@ It receives two parameters: the coeffect identifier which has to be a keyword an
 This example registers a coeffect `:om/state` that extracts from the local state of an Om component
 the values associated to some given keys.
 
-## register-events-delegation!
+## `register-events-delegation!`
 This function makes the handling of the vector of event identifiers it receives as its first parameter
 to be delegated to the event handler associated with the event identifier it receives as its second parameter.
 
@@ -147,7 +147,7 @@ will be delegated to the event handler of the `:facilities-device-power-curve.en
 which will be the only handler that needs to be registered using `register-event-handler!`.
 
 
-## interceptor
+## `interceptor`
 It's a factory function that can be used to create an interceptor.
 
 See [Interceptors](https://github.com/GreenPowerMonitor/reffectory/blob/master/docs/interceptors.md) to know what an interceptor is.
@@ -173,8 +173,8 @@ and adds it's result to the coeffects map.
 
 You can check [another interesting usage of `interceptor` in reffectory's tests](https://github.com/GreenPowerMonitor/reffectory/blob/bfa13d839782f103cc83502c1b5b4c020887da14/test/greenpowermonitor/reffectory_test.cljc#L49).
 
-## get-handler
-This function is used only in tests and gets handlers registered in reffectory.
+## `get-handler`
+This function should be used **only in tests**. It gets handlers registered in reffectory.
 
 It receives two parameters:  the handler type and the identifier of
 the thing (event, effect or coeffect) the handler is associated with.
