@@ -31,7 +31,7 @@
     (when data
       ((get-handler :fxs effect-id) data))))
 
-(def do-fx
+(def ^:private do-fx
   (interceptor {:id :do-fx
                 :after (fn [{:keys [effects]}]
                          (handle-effects effects))}))
