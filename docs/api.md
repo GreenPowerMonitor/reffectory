@@ -1,6 +1,6 @@
 ## `dispatch!`
 This function dispatches an **event** that will be processed by the event handling machinery.
-That **event** mues be a vector of at least one element. The first element identifies the kind of event and the rest of the elements are the payload of the event.
+That **event** must be a vector of at least one element. The first element identifies the kind of event and the rest of the elements are the payload of the event.
 
 **Important**: The corresponding event handler will be **synchronously** run.
 
@@ -93,7 +93,7 @@ represented by the custom `:server-uri` and `:state` coeffects into the coeffect
 
 Notice how in this example when `inject-cofx` is used with the `:state` coeffect, it receives another parameter beside the coeffect identifier,
 that means that the `:state` coeffect handler will receive that parameter and use it to compute the value that will be injected in the coeffects map
-when the `::update-facilities-devices-list-info` event handler will be about to be executed.
+when the `::update-facilities-devices-list-info` event handler is about to be executed.
 
 ## `register-fx!`
 This function is used to associate a given effect with its handler.
@@ -131,8 +131,8 @@ This example registers a coeffect `:om/state` that extracts from the local state
 the values associated to some given keys.
 
 ## `register-events-delegation!`
-This function makes the handling of the vector of event identifiers it receives as its first parameter
-to be delegated to the event handler associated with the event identifier it receives as its second parameter.
+This function delegates the handling of the vector of event identifiers it receives as its first parameter
+to the event handler associated with the event identifier it receives as its second parameter.
 
 Example:
 ```clj
@@ -169,7 +169,7 @@ Example:
 
 In this example we show the `inject-cofx` function from reffectory. It uses the `interceptor` function to create an interceptor that
 will apply the corresponding coeffect handler right before the event handler to which you pass this interceptor when it's registered (see [`register-event-handler` documentation above](https://github.com/GreenPowerMonitor/reffectory/blob/master/docs/api.md#register-event-handler))
-and adds it's result to the coeffects map.
+and adds its result to the coeffects map.
 
 You can check [another interesting usage of `interceptor` in reffectory's tests](https://github.com/GreenPowerMonitor/reffectory/blob/bfa13d839782f103cc83502c1b5b4c020887da14/test/greenpowermonitor/reffectory_test.cljc#L49).
 
