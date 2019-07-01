@@ -1,4 +1,4 @@
-(defproject greenpowermonitor/reffectory "0.1.0"
+(defproject greenpowermonitor/reffectory "0.1.1-SNAPSHOT"
   :description "Clojure/ClojureScript framework inspired by re-frame that provides a full events system with effects and coeffects"
 
   :url "https://github.com/GreenPowerMonitor/reffectory"
