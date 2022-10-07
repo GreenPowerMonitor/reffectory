@@ -3,7 +3,7 @@
 A Clojure/ClojureScript framework designed to provide a full events system with effects
 and coeffects inspired by [re-frame](https://github.com/Day8/re-frame)'s one.
 
-reffectory is the core of re-om, the library we're using to introduce [re-frame's event-driven architecture](https://github.com/Day8/re-frame#why-should-you-care)
+reffectory is the core of [re-om](https://github.com/GreenPowerMonitor/re-om), the library we're using to introduce [re-frame's event-driven architecture](https://github.com/Day8/re-frame#why-should-you-care)
 into a legacy ClojureScript application that uses [Om](https://github.com/omcljs/om).
 
 We extracted reffectory from re-om and made it also work for Clojure in the hope that more people
